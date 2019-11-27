@@ -69,15 +69,8 @@ jobs:
           name: install plugins bundle
           command: cfy plugins bundle-upload
       - run:
-          name: create secrets
+          name: create iaas secrets
           command: |
-            set +x
-            echo ${agent_key_private} | base64 --decode | sed -E ':a;N;$!ba;s/\\n/\r{0,1}\n/g' > agent_key_private
-            echo ${agent_key_public} | base64 --decode | sed -E ':a;N;$!ba;s/\\n/\r{0,1}\n/g' > agent_key_public
-            set -x
-
-            cfy secrets create agent_key_private -f agent_key_private
-            cfy secrets create agent_key_public -f agent_key_public
 
             cfy secrets create aws_access_key_id -s `echo "${aws_access_key_id}" | base64 --decode`
             cfy secrets create aws_secret_access_key -s `echo "${aws_secret_access_key}" | base64 --decode`
@@ -89,6 +82,19 @@ jobs:
             cfy secrets create azure_client_id -s `echo "${azure_client_id}" | base64 --decode`
             cfy secrets create azure_client_secret -s `echo "${azure_client_secret}" | base64 --decode`
             cfy secrets create azure_location -s `echo "${azure_location}" | base64 --decode`
+
+      - run:
+          name: create agent secrets
+          command: |
+
+            set +x
+            echo ${agent_key_private} | sed -E ':a;N;$!ba;s/\\n/\r{0,1}\n/g' | base64 --decode > agent_key_private
+            echo ${agent_key_public} | sed -E ':a;N;$!ba;s/\\n/\r{0,1}\n/g' | base64 --decode > agent_key_public
+            set -x
+
+            cfy secrets create agent_key_private -f agent_key_private
+            cfy secrets create agent_key_public -f agent_key_public
+
       - run:
           name: Install AWS
           command: cfy install hello-world-example/aws.yaml -n aws.yaml -i aws_region_name=${aws_region_name}
