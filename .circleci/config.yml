@@ -89,13 +89,30 @@ jobs:
             ssh-keygen -t rsa -N '' -f foo.rsa
             cfy secrets create agent_key_private -f foo.rsa
             cfy secrets create agent_key_public -f foo.rsa.pub
-
       - run:
           name: Install AWS
-          command: cfy install hello-world-example/aws.yaml -n aws.yaml -i aws_region_name=`echo "${aws_region_name}" | base64 --decode`
+          command: |
+            set +x
+            cfy install hello-world-example/aws.yaml -n aws.yaml -i aws_region_name=`echo "${aws_region_name}" | base64 --decode`
+            set -x
+      - run:
+          name: Uninstall AWS
+          command: |
+            set +x
+            cfy uninstall hello-world-example.aws
+            set -x
       - run:
           name: Install Azure
-          command: cfy install https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip -n azure.yaml -i location=`echo "${azure_location}" | base64 --decode` -i agent_password=aG3n3r1kp4553rd
+          command: |
+            set +x
+            cfy install https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip -n azure.yaml -i location=`echo "${azure_location}" | base64 --decode` -i agent_password=aG3n3r1kp4553rd
+            set -x
+      - run:
+          name: Uninstall Azure
+          command: |
+            set +x
+            cfy uninstall hello-world-example.azure
+            set -x
 
 
   blueprint-validation:

@@ -11,6 +11,8 @@ node_templates:
         configure:
           implementation: ansible.cloudify_ansible.tasks.run
           inputs:
+            ansible_env_vars:
+              TRANSFORM_INVALID_GROUP_CHARS: 'always'
             site_yaml_path: apache2/playbook.yaml
             sources: { get_attribute: [ SELF, sources ] }
     relationships:
