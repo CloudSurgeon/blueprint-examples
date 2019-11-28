@@ -67,7 +67,12 @@ jobs:
             cfy license upload license.yaml
       - run:
           name: install plugins bundle
-          command: cfy plugins bundle-upload
+          command: |
+            cfy plugins upload http://repository.cloudifysource.org/cloudify/wagons/cloudify-ansible-plugin/2.5.0/cloudify_ansible_plugin-2.5.0-py27-none-linux_x86_64-centos-Core.wgn -y http://www.getcloudify.org/spec/ansible-plugin/2.5.0/plugin.yaml
+            cfy plugins upload http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.15.3/cloudify_utilities_plugin-1.15.3-py27-none-linux_x86_64-centos-Core.wgn -y http://www.getcloudify.org/spec/utilities-plugin/1.15.3/plugin.yaml
+            cfy plugins upload http://repository.cloudifysource.org/cloudify/wagons/cloudify-aws-plugin/2.3.0/cloudify_aws_plugin-2.3.0-py27-none-linux_x86_64-centos-Core.wgn -y http://www.getcloudify.org/spec/aws-plugin/2.3.0/plugin.yaml
+            cfy plugins upload http://repository.cloudifysource.org/cloudify/wagons/cloudify-azure-plugin/2.1.7/cloudify_azure_plugin-2.1.7-py27-none-linux_x86_64-centos-Core.wgn -y http://www.getcloudify.org/spec/azure-plugin/2.1.7/plugin.yaml
+#          command: cfy plugins bundle-upload
       - run:
           name: create iaas secrets
           command: |
