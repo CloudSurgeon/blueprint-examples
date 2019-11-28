@@ -5,16 +5,14 @@ description: Install Drupal7 on infrastructure.
 node_templates:
 
   hello-world:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        configure:
-          implementation: ansible.cloudify_ansible.tasks.run
-          inputs:
-            ansible_env_vars:
-              TRANSFORM_INVALID_GROUP_CHARS: 'always'
-            site_yaml_path: apache2/playbook.yaml
-            sources: { get_attribute: [ SELF, sources ] }
+    type: cloudify.nodes.ansible.Executor
+    properties:
+      playbook_path: apache2/playbook.yaml
+      debug_level: 3
+      ansible_env_vars:
+        TRANSFORM_INVALID_GROUP_CHARS: always
+        ANSIBLE_HOST_KEY_CHECKING: false
+        ANSIBLE_INVALID_TASK_ATTRIBUTE_FAILED: false
     relationships:
       - type: cloudify.ansible.relationships.connected_to_host
         target: vm
